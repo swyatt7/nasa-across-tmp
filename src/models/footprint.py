@@ -1,4 +1,0 @@
-
-
-class Footprint:
-    pass
