@@ -1,44 +1,81 @@
 from enum import IntEnum
+from sqlalchemy import Enum
 
-class mission_type(IntEnum):
+class PSQLTableEnum:
+
+    @classmethod
+    def table_name(cls):
+        return cls.__name__
+
+    @classmethod
+    def to_psql_enum(cls, nullable=False):
+        val = tuple([x.name for x in cls])
+        e = Enum(
+            *val,
+            name = cls.table_name(),
+            nullable = nullable
+        )
+        return e
+
+
+class MissionType(PSQLTableEnum, IntEnum):
     pointed = 1
     survey = 2
 
+    def table_name():
+        return "mission_type"
 
-class observatory_type(IntEnum):
+
+class ObservatoryType(PSQLTableEnum, IntEnum):
     space_based = 1
     ground_based = 2
 
+    def table_name():
+        return "observatory_type"
+    
 
-class schedule_status(IntEnum):
+class ScheduleStatus(PSQLTableEnum, IntEnum):
     planned = 1
     completed = 2
     canceled = 3
 
+    def table_name():
+        return "schedule_status"
 
-class schedule_type(IntEnum):
+
+class ScheduleType(PSQLTableEnum, IntEnum):
     low_fidelity = 1
     high_fidelity = 2
     as_executed = 3
 
+    def table_name():
+        return "schedule_type"
 
-class observation_status(IntEnum):
+class ObservationStatus(PSQLTableEnum, IntEnum):
     planned = 1
     completed = 2
     canceled = 3
 
+    def table_name():
+        return "observation_status"
 
-class observation_type(IntEnum):
+class ObservationType(PSQLTableEnum, IntEnum):
     photometric = 1
     spectroscopic = 2
 
+    def table_name():
+        return "observation_type"
 
-class depth_unit(IntEnum):
+class DepthUnit(PSQLTableEnum, IntEnum):
     ab_mag = 1
     vega_mag = 2
     flux_erg = 3
     flux_jy = 4
 
+
+    def table_name():
+        return "depth_unit"
+    
     def __str__(self):
         split_name = str(self.name).split('_')
         return str.upper(split_name[0]) + ' ' + split_name[1]

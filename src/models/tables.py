@@ -7,12 +7,12 @@ from geoalchemy2 import Geography
 
 from .db_base import Base
 from .across_enums import (
-    observatory_type,
-    schedule_status,
-    schedule_type,
-    observation_status,
-    observation_type,
-    depth_unit
+    ObservatoryType,
+    ScheduleStatus,
+    ScheduleType,
+    ObservationStatus,
+    ObservationType,
+    DepthUnit
 )
 
 
@@ -30,8 +30,7 @@ class Observatory(Base):
     id = Column(Integer, primary_key=True)
     datecreated = Column(Date)
     name = Column(String)
-    observatory_type = Column(Enum(
-        *tuple([x.name for x in observatory_type]), name="observatory_type"), nullable=False)
+    observatory_type = Column(ObservationType.to_psql_enum())
     telescopes: Mapped[List["Telescope"]] = relationship(back_populates="observatory")
 
 
@@ -70,10 +69,8 @@ class Schedule(Base):
     id = Column(Integer, primary_key=True)
     datecreated = Column(Date)
     name = Column(String)
-    schedule_status = Column(Enum(
-        *tuple([x.name for x in schedule_status]), name="schedule_status"))
-    schedule_type = Column(Enum(
-        *tuple([x.name for x in schedule_type]), name="schedule_type"))
+    schedule_status = Column(ScheduleStatus.to_psql_enum())
+    schedule_type = Column(ScheduleType.to_psql_enum())
     instrument_id = mapped_column(ForeignKey(Instrument.id))
     instrument: Mapped["Instrument"] = relationship(back_populates="schedules")
     observations: Mapped[List["Observation"]] = relationship(back_populates="schedule")
@@ -92,12 +89,10 @@ class Observation(Base):
     obstime_start = Column(Date)
     obstime_end = Column(Date)
     exposure_time = Column(Float)
-    observation_status = Column(Enum(
-        *tuple([x.name for x in observation_status]), name="observation_status"))
+    observation_status = Column(ObservationStatus.to_psql_enum())
     schedule_id: Mapped[int] = mapped_column(ForeignKey(Schedule.id))
     schedule: Mapped["Schedule"] = relationship(back_populates="observations")
-    observation_type = Column(Enum(
-        *tuple([x.name for x in observation_type]), name="observation_type"))
+    observation_type = Column(ObservationType.to_psql_enum())
     photometric_observation: Mapped["PhotometricObservation"] = relationship(back_populates="observation")
     spectroscopic_observation: Mapped["SpectroscopicObservation"] = relationship(back_populates="observation")
 
@@ -106,10 +101,9 @@ class PhotometricObservation(Observation, Base):
     __tablename__ = "photometric_observavation"
 
     id = Column(Integer, primary_key=True)
-    depth = Column(Float)
-    depth_error = Column(Float)
-    depth_unit = Column(Enum(
-        *tuple([x.name for x in depth_unit]), name="depth_unit"))
+    depth = Column(Float, nullable=True)
+    depth_error = Column(Float, nullable=True)
+    depth_unit = Column(DepthUnit.to_psql_enum(nullable=True))
     position_angle = Column(Float)
     central_wavelength = Column(Float)
     bandwidth = Column(Float)
@@ -125,3 +119,4 @@ class SpectroscopicObservation(Observation, Base):
     id = Column(Integer, primary_key=True)
     observation_id: Mapped[int] = mapped_column(ForeignKey(Observation.id))
     observation: Mapped["Observation"] = relationship(back_populates="spectroscopic_observation")
+    other_information = Column(JSON)
