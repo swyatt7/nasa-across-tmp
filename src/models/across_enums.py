@@ -2,7 +2,6 @@ from enum import IntEnum
 from sqlalchemy import Enum
 
 class PSQLTableEnum:
-
     @classmethod
     def table_name(cls):
         return cls.__name__

@@ -1,6 +1,6 @@
 from typing import List
 from sqlalchemy import (
-    Column, String, Integer, Date, Enum, ForeignKey, Float, JSON
+    Column, String, Integer, Date, ForeignKey, Float, JSON
 )
 from sqlalchemy.orm import Mapped, relationship, mapped_column
 from geoalchemy2 import Geography
@@ -30,7 +30,7 @@ class Observatory(Base):
     id = Column(Integer, primary_key=True)
     datecreated = Column(Date)
     name = Column(String)
-    observatory_type = Column(ObservationType.to_psql_enum())
+    observatory_type = Column(ObservatoryType.to_psql_enum())
     telescopes: Mapped[List["Telescope"]] = relationship(back_populates="observatory")
 
 
