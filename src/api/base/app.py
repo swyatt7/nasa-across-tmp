@@ -37,10 +37,12 @@ def hello():
 def home(path):
     return FileResponse('src/web/client/public', path)
 
+
 @api_app.get("/")
 @api_app.get("/index")
 async def read_index():
     return FileResponse("src/web/client/public/index.html")
+
 
 # Tests Python Flask connection
 @api_app.get("/rand")
@@ -48,11 +50,12 @@ def get_rand():
     val = str(random.randint(0, 100))
     return val
 
+
 # Tests Python Flask Svelte connection
 @api_app.get("/randData")
 def randData(request: Request):
     print('randData')
-    params = request.args.get('params')
+    params = request.query_params.get("params")
     randomNumber = random.randint(0, 100)
 
     data = json.dumps({
