@@ -17,6 +17,16 @@ class PSQLTableEnum:
         return e
 
 
+class UserRoleType(PSQLTableEnum, IntEnum):
+    user = 1
+    admin = 2
+    test_read_api = 3
+    test_write_api = 4
+
+    def table_name():
+        return "role_types"
+
+
 class MissionType(PSQLTableEnum, IntEnum):
     pointed = 1
     survey = 2

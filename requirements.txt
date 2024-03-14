@@ -2,5 +2,4 @@ sqlalchemy
 psycopg2-binary
 geoalchemy2
 fastapi
-flask
-uvicorn[standard]
+pyjwt

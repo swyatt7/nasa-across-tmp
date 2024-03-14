@@ -7,6 +7,7 @@ class Config(object):
     DB_NAME = os.environ.get('DB_NAME', 'acrossdev')
     DB_HOST = os.environ.get('DB_HOST', 'localhost')
     DB_PORT = os.environ.get('DB_PORT', '5432')
+    SECRET = os.environ.get('SECRET', 'Cenedl heb iaith, cenedl heb galon')
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):
